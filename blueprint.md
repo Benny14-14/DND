@@ -20,9 +20,17 @@ The application follows a modern, dark-fantasy design aesthetic.
 *   **Interactivity**: UI elements such as buttons and forms have hover effects and subtle animations to provide user feedback.
 *   **Iconography**: The Font Awesome library is included for easy use of icons to improve UI clarity.
 
-## 3. Implemented Features
+## 3. Web Components
 
-### 3.1. Landing Page
+The application uses Web Components to create reusable UI elements.
+
+*   **Character Sheet** (`<character-sheet>`): A component to display character information.
+*   **Chat Box** (`<chat-box>`): A real-time chat component using Firebase Firestore.
+*   **Dice Roller** (`<dice-roller>`): An interactive dice roller.
+
+## 4. Implemented Features
+
+### 4.1. Landing Page
 
 *   **File**: `index.html`
 *   **Styling**: `landing.css`
@@ -31,7 +39,7 @@ The application follows a modern, dark-fantasy design aesthetic.
     *   Displays a welcome message with the application's title and a tagline.
     *   Includes a button that navigates users to the authentication page.
 
-### 3.2. User Authentication
+### 4.2. User Authentication
 
 *   **File**: `auth.html`
 *   **Styling**: `auth.css`
@@ -40,7 +48,7 @@ The application follows a modern, dark-fantasy design aesthetic.
     *   Uses Firebase Authentication for user management.
     *   Features a rotating 3D effect to switch between the login and registration forms.
 
-### 3.3. Game Lobby
+### 4.3. Game Lobby
 
 *   **File**: `games.html`
 *   **Styling**: `games.css`
@@ -50,17 +58,17 @@ The application follows a modern, dark-fantasy design aesthetic.
     *   Allows users to join an existing game using a join code.
     *   Provides a logout button.
 
-### 3.4. Game View
+### 4.4. Game View
 
 *   **File**: `game.html`
 *   **Styling**: `game.css`
 *   **Functionality**:
-    *   The basic layout for the main game interface.
+    *   The main game interface.
     *   Displays the game title.
     *   Includes a button to navigate back to the game lobby.
-    *   The layout is divided into a main game board area and a side panel for character sheets and chat.
+    *   Integrates the `character-sheet`, `chat-box`, and `dice-roller` web components.
 
-## 4. File Structure
+## 5. File Structure
 
 ```
 .
@@ -75,9 +83,26 @@ The application follows a modern, dark-fantasy design aesthetic.
 ├── game.html
 ├── game.css
 ├── game.js
-├── main.js
 ├── style.css
 ├── firebase-config.js
+├── firestore.rules
+├── firebase.json
 ├── blueprint.md
-└── .firebaserc
+└── components
+    ├── character-sheet.css
+    ├── character-sheet.js
+    ├── chat-box.css
+    ├── chat-box.js
+    ├── dice-roller.css
+    └── dice-roller.js
 ```
+
+## 6. Current Task: Fix Registration
+
+*   **Problem**: Users encountered a black screen after registering a new account.
+*   **Root Cause**: A race condition was identified where the user was redirected before their profile was fully created, leading to an error on the game page.
+*   **Solution**:
+    1.  Removed a conflicting script from `auth.html` to ensure a single, reliable redirect.
+    2.  Updated `auth.js` to ensure the user's display name is set on registration.
+    3.  Created `firestore.rules` and `firebase.json` to allow the creation of new user documents.
+    4.  Deleted the now-redundant `main.js` file.
