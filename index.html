@@ -1,14 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Realm</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="landing.css">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+    <div class="landing-container">
+        <div class="landing-content">
+            <h1 class="landing-title">The Digital Dungeon</h1>
+            <p class="landing-tagline">Your epic Dungeons & Dragons adventures await. Create, play, and conquer.</p>
+            <div class="landing-actions">
+                <a href="auth.html" class="btn btn-primary">Enter the Tavern</a>
+            </div>
+        </div>
+    </div>
+    <script src="main.js" type="module"></script>
 </body>
 </html>

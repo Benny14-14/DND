@@ -1,0 +1,55 @@
+:host {
+    display: block;
+}
+
+.dice-roller {
+    background-color: #2c2c2c;
+    border: 1px solid #8A2BE2;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.dice-roller h3 {
+    color: #8A2BE2;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+}
+
+.dice-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.dice-buttons button {
+    background-color: #483D8B;
+    color: #f0f0f0;
+    border: 1px solid #8A2BE2;
+    border-radius: 5px;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.dice-buttons button:hover {
+    background-color: #8A2BE2;
+}
+
+.dice-buttons button:active {
+    transform: scale(0.95);
+}
+
+.roll-result {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    min-height: 2rem;
+    margin-top: 1rem;
+    border-top: 1px solid #483D8B;
+    padding-top: 1rem;
+}

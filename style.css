@@ -1,1 +1,12 @@
-/* Add styles here */
+
+body {
+    font-family: sans-serif;
+    background-color: #f0e6d2;
+    color: #3a2d21;
+}
+
+#app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}

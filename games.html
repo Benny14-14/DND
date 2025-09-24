@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Lobby</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="games.css">
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <header class="lobby-header">
+            <h1>Game Lobby</h1>
+            <button id="logout-button" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </header>
+
+        <main class="lobby-main">
+            <div class="lobby-actions">
+                <div class="card" id="create-game">
+                    <h3>Create a New Game</h3>
+                    <div class="form-group">
+                        <input type="text" id="game-name" placeholder="Enter game name">
+                        <button id="create-game-button" class="btn btn-primary"><i class="fas fa-plus"></i> Create</button>
+                    </div>
+                </div>
+
+                <div class="card" id="join-game">
+                    <h3>Join an Existing Game</h3>
+                    <div class="form-group">
+                        <input type="text" id="join-code" placeholder="Enter join code">
+                        <button id="join-game-button" class="btn btn-secondary"><i class="fas fa-sign-in-alt"></i> Join</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-list-container">
+                <h2>Your Games</h2>
+                <ul id="games" class="game-list"></ul>
+            </div>
+        </main>
+    </div>
+    <script src="games.js" type="module"></script>
+</body>
+</html>

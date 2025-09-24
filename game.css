@@ -1,0 +1,81 @@
+:root {
+    --primary-color: #8A2BE2; /* Blue Violet */
+    --secondary-color: #483D8B; /* Dark Slate Blue */
+    --background-color: #1a1a1a;
+    --surface-color: #2c2c2c;
+    --text-color: #f0f0f0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 2rem;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.game-header h1 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 1rem;
+    border: none;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+
+.game-main {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 2rem;
+    overflow: hidden;
+}
+
+.game-board {
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+}
+
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    overflow: hidden;
+}
+
+.character-sheets, .chat {
+    background-color: var(--surface-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
