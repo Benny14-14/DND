@@ -28,9 +28,18 @@ The application uses Web Components to create reusable UI elements.
 *   **Chat Box** (`<chat-box>`): A real-time chat component using Firebase Firestore.
 *   **Dice Roller** (`<dice-roller>`): An interactive dice roller.
 
-## 4. Implemented Features
+## 4. Firebase V9 Migration & Authentication Fix
 
-### 4.1. Landing Page
+*   **Problem**: Users encountered a black screen after registering a new account, and authentication was generally unstable.
+*   **Root Cause**: The application was using the outdated, non-modular Firebase v8 SDK, and the HTML files contained conflicting Firebase scripts.
+*   **Solution**:
+    1.  **Migrated to Firebase v9**: Refactored `firebase.js`, `auth.js`, `games.js`, and `game.js` to use the modern, modular Firebase v9 SDK.
+    2.  **Removed Conflicting Scripts**: Deleted the old Firebase v8 `compat` scripts from `auth.html`, `games.html`, and `game.html` to resolve conflicts.
+    3.  **Updated Firestore Rules**: Ensured `firestore.rules` were correctly configured to allow read/write access to the database.
+
+## 5. Implemented Features
+
+### 5.1. Landing Page
 
 *   **File**: `index.html`
 *   **Styling**: `landing.css`
@@ -39,7 +48,7 @@ The application uses Web Components to create reusable UI elements.
     *   Displays a welcome message with the application's title and a tagline.
     *   Includes a button that navigates users to the authentication page.
 
-### 4.2. User Authentication
+### 5.2. User Authentication
 
 *   **File**: `auth.html`
 *   **Styling**: `auth.css`
@@ -48,7 +57,7 @@ The application uses Web Components to create reusable UI elements.
     *   Uses Firebase Authentication for user management.
     *   Features a rotating 3D effect to switch between the login and registration forms.
 
-### 4.3. Game Lobby
+### 5.3. Game Lobby
 
 *   **File**: `games.html`
 *   **Styling**: `games.css`
@@ -58,7 +67,7 @@ The application uses Web Components to create reusable UI elements.
     *   Allows users to join an existing game using a join code.
     *   Provides a logout button.
 
-### 4.4. Game View
+### 5.4. Game View
 
 *   **File**: `game.html`
 *   **Styling**: `game.css`
@@ -68,7 +77,7 @@ The application uses Web Components to create reusable UI elements.
     *   Includes a button to navigate back to the game lobby.
     *   Integrates the `character-sheet`, `chat-box`, and `dice-roller` web components.
 
-## 5. File Structure
+## 6. File Structure
 
 ```
 .
@@ -84,7 +93,7 @@ The application uses Web Components to create reusable UI elements.
 ├── game.css
 ├── game.js
 ├── style.css
-├── firebase-config.js
+├── firebase.js
 ├── firestore.rules
 ├── firebase.json
 ├── blueprint.md
@@ -96,13 +105,3 @@ The application uses Web Components to create reusable UI elements.
     ├── dice-roller.css
     └── dice-roller.js
 ```
-
-## 6. Current Task: Fix Registration
-
-*   **Problem**: Users encountered a black screen after registering a new account.
-*   **Root Cause**: A race condition was identified where the user was redirected before their profile was fully created, leading to an error on the game page.
-*   **Solution**:
-    1.  Removed a conflicting script from `auth.html` to ensure a single, reliable redirect.
-    2.  Updated `auth.js` to ensure the user's display name is set on registration.
-    3.  Created `firestore.rules` and `firebase.json` to allow the creation of new user documents.
-    4.  Deleted the now-redundant `main.js` file.
