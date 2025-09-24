@@ -1,11 +1,15 @@
-import firebaseConfig from './firebase-config.js';
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-const auth = firebase.auth();
-const db = firebase.firestore();
+import { auth, db } from './firebase.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+import {
+    doc,
+    getDoc,
+    collection,
+    query,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 function getGameId() {
     const params = new URLSearchParams(window.location.search);
@@ -18,7 +22,7 @@ function rollDice(dice) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    auth.onAuthStateChanged(user => {
+    onAuthStateChanged(auth, user => {
         if (!user) {
             window.location.href = 'auth.html';
             return;
@@ -30,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const gameRef = db.collection('games').doc(gameId);
+        const gameRef = doc(db, 'games', gameId);
         const chatBox = document.querySelector('chat-box');
         const diceRoller = document.querySelector('dice-roller');
 
-        gameRef.get().then(doc => {
-            if (doc.exists) {
-                document.getElementById('game-title').textContent = doc.data().name;
+        getDoc(gameRef).then(docSnap => {
+            if (docSnap.exists()) {
+                document.getElementById('game-title').textContent = docSnap.data().name;
             } else {
                 console.error('Game not found');
                 window.location.href = 'games.html';
@@ -49,8 +53,10 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'games.html';
         });
 
-        const messagesRef = gameRef.collection('messages').orderBy('timestamp');
-        messagesRef.onSnapshot(snapshot => {
+        const messagesRef = collection(db, 'games', gameId, 'messages');
+        const q = query(messagesRef, orderBy('timestamp'));
+
+        onSnapshot(q, snapshot => {
             snapshot.docChanges().forEach(change => {
                 if (change.type === 'added') {
                     const message = change.doc.data();
@@ -69,13 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = chatBox.shadowRoot.querySelector('input');
             const text = input.value.trim();
             if (text) {
-                messagesRef.add({
+                addDoc(messagesRef, {
                     text,
                     sender: {
                         uid: user.uid,
                         displayName: user.displayName
                     },
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    timestamp: serverTimestamp()
                 });
                 input.value = '';
             }
@@ -88,13 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const resultElement = diceRoller.shadowRoot.querySelector('.roll-result');
                 resultElement.textContent = `You rolled a ${result} on a ${dice}`;
 
-                messagesRef.add({
+                addDoc(messagesRef, {
                     text: `rolled a ${dice} and got ${result}`,
                     sender: {
                         uid: user.uid,
                         displayName: user.displayName
                     },
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    timestamp: serverTimestamp()
                 });
             });
         });

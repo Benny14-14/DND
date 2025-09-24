@@ -1,9 +1,10 @@
-import firebaseConfig from './firebase-config.js';
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+import { auth, db } from './firebase.js';
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    updateProfile
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
@@ -19,10 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            auth.signInWithEmailAndPassword(email, password)
+            signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // Signed in
-                    window.location.href = 'index.html';
+                    window.location.href = 'games.html';
                 })
                 .catch((error) => {
                     alert(error.message);
@@ -36,20 +37,20 @@ document.addEventListener('DOMContentLoaded', function () {
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
 
-            auth.createUserWithEmailAndPassword(email, password)
+            createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Signed in
                     const user = userCredential.user;
-                    db.collection('users').doc(user.uid).set({
-                        username: username,
-                        email: email
-                    })
+                    // Set the display name and create user document
+                    return updateProfile(user, { displayName: username })
                         .then(() => {
-                            window.location.href = 'index.html';
-                        })
-                        .catch((error) => {
-                            alert(error.message);
+                            return setDoc(doc(db, 'users', user.uid), {
+                                username: username,
+                                email: email
+                            });
                         });
+                })
+                .then(() => {
+                    window.location.href = 'games.html';
                 })
                 .catch((error) => {
                     alert(error.message);
@@ -58,13 +59,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+if (showRegister) {
+    showRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+    });
+}
 
-showRegister.addEventListener('click', () => {
-    loginForm.style.display = 'none';
-    registerForm.style.display = 'block';
-});
-
-showLogin.addEventListener('click', () => {
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
-});
+if (showLogin) {
+    showLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+    });
+}

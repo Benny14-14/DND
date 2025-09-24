@@ -1,0 +1,48 @@
+type User @table {
+  username: String!
+  email: String!
+  displayName: String
+  photoUrl: String
+}
+
+type Campaign @table {
+  name: String!
+  dm: User!
+  description: String
+  currentSessionDate: Date
+  sessionNotes: String
+}
+
+type Character @table {
+  name: String!
+  characterType: String! # Assuming "PC" or "NPC"
+  campaign: Campaign!
+  user: User
+  race: String
+  class: String
+  level: Int
+  # stats can be a JSON string or separate fields if more detailed.
+  # For simplicity, let's assume a JSON string for now.
+  stats: String # e.g., "{ strength: 15, dexterity: 12 }"
+  description: String
+  hitPoints: Int
+}
+
+type Item @table {
+  name: String!
+  character: Character!
+  description: String
+  quantity: Int
+  weight: Float
+}
+
+type Spell @table {
+  name: String!
+  character: Character!
+  description: String
+  level: Int
+  castingTime: String
+  range: String
+  components: String
+  duration: String
+}

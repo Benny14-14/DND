@@ -1,19 +1,29 @@
-import firebaseConfig from './firebase-config.js';
-
-// Initialize Firebase
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const auth = firebase.auth();
-const db = firebase.firestore();
+import { auth, db } from './firebase.js';
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+import {
+    collection,
+    addDoc,
+    query,
+    where,
+    getDocs,
+    updateDoc,
+    arrayUnion,
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 const createGameButton = document.getElementById('create-game-button');
 const joinGameButton = document.getElementById('join-game-button');
 const gamesList = document.getElementById('games');
 const logoutButton = document.getElementById('logout-button');
+const welcomeMessage = document.getElementById('welcome-message');
 
-auth.onAuthStateChanged(user => {
+onAuthStateChanged(auth, user => {
     if (user) {
+        if (user.displayName) {
+            welcomeMessage.textContent = `Welcome, ${user.displayName}!`;
+        } else {
+            welcomeMessage.textContent = 'Welcome!';
+        }
         loadGames(user.uid);
     } else {
         window.location.href = 'auth.html';
@@ -29,7 +39,7 @@ createGameButton.addEventListener('click', () => {
     const user = auth.currentUser;
     if (gameName && user) {
         const joinCode = generateJoinCode();
-        db.collection('games').add({
+        addDoc(collection(db, 'games'), {
             name: gameName,
             owner: user.uid,
             joinCode: joinCode,
@@ -37,7 +47,6 @@ createGameButton.addEventListener('click', () => {
         })
         .then(() => {
             document.getElementById('game-name').value = '';
-            loadGames(user.uid);
         });
     }
 });
@@ -46,16 +55,16 @@ joinGameButton.addEventListener('click', () => {
     const joinCode = document.getElementById('join-code').value;
     const user = auth.currentUser;
     if (joinCode && user) {
-        db.collection('games').where('joinCode', '==', joinCode).get()
+        const q = query(collection(db, 'games'), where('joinCode', '==', joinCode));
+        getDocs(q)
             .then(querySnapshot => {
                 if (!querySnapshot.empty) {
                     const gameDoc = querySnapshot.docs[0];
-                    gameDoc.ref.update({
-                        players: firebase.firestore.FieldValue.arrayUnion(user.uid)
+                    updateDoc(gameDoc.ref, {
+                        players: arrayUnion(user.uid)
                     })
                     .then(() => {
                         document.getElementById('join-code').value = '';
-                        loadGames(user.uid);
                     });
                 } else {
                     alert('Invalid Join Code');
@@ -65,7 +74,8 @@ joinGameButton.addEventListener('click', () => {
 });
 
 function loadGames(userId) {
-    db.collection('games').where('players', 'array-contains', userId).onSnapshot(querySnapshot => {
+    const q = query(collection(db, 'games'), where('players', 'array-contains', userId));
+    onSnapshot(q, querySnapshot => {
         gamesList.innerHTML = '';
         querySnapshot.forEach(doc => {
             const game = doc.data();
@@ -91,7 +101,7 @@ function loadGames(userId) {
 }
 
 logoutButton.addEventListener('click', () => {
-    auth.signOut().then(() => {
+    signOut(auth).then(() => {
         window.location.href = 'auth.html';
     });
 });

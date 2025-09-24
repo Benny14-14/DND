@@ -1,0 +1,24 @@
+mutation CreateDragon($name: String!, $level: Int!) @auth(level: USER) {
+  dragon_insert(data: {
+    name: $name,
+    level: $level
+  })
+}
+
+query ListDragons @auth(level: PUBLIC) {
+  dragons {
+    id
+    name
+    level
+  }
+}
+
+mutation UpdateDragon($id: UUID!, $level: Int) @auth(level: USER) {
+  dragon_update(key: {id: $id}, data: {
+    level: $level
+  })
+}
+
+mutation DeleteDragon($id: UUID!) @auth(level: USER) {
+  dragon_delete(key: {id: $id})
+}
